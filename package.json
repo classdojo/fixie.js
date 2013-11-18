@@ -17,7 +17,9 @@
   },
   "dependencies": {
     "protoclass": "0.0.2",
-    "sift": "0.0.12"
+    "sift": "0.0.12",
+    "toarray": "0.0.1",
+    "comerr": "0.0.6"
   },
   "devDependencies": {
     "expect.js": "~0.2.0",

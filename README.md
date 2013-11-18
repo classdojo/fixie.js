@@ -1,29 +1,28 @@
+Fixie makes it easy to setup fixtures for that act as a drop-in replacement for
+functions. It's used specifically used to fake commands in [https://github.com/classdojo/mojo.js](mojo.js). 
+
+### Example:
+
 
 ```javascript
 var fixie = require("fixie");
 
 var fixtures = {
-  register: [
-    {
-      match: { email: {$in: ["t1@classdjo.com"] },
-      error: new Error("that's a teacher account")
-    }
-  ],
-  loadProfile: [
+  loadUser: [
     {
       data: {
-        _id: "profile1"
+        _id: "user1"
     }
   ],
   loadClasses: {
     data: [
       {
         _id: "class1",
-        profile: "profile1"
+        user: "user1"
       },
       {
         _id: "class2",
-        profile: "profile1"
+        user: "user1"
       }
     ]
   },
@@ -44,4 +43,15 @@ fix.loadProfile({ _id: profile1 }, function (err, profile) {
     // do stuff with fixtures
   });
 });
+```
+
+
+### Fixture Syntax
+
+```
+  - method - the method name
+    - match (optional) - match against the query
+    - error (optional) - error to return for the given match
+    - data (obj/fn) (optional) - data to return
+    
 ```
