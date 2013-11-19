@@ -1,57 +1,81 @@
 Fixie makes it easy to setup fixtures for that act as a drop-in replacement for
 functions. It's used specifically used to fake commands in [https://github.com/classdojo/mojo.js](mojo.js). 
 
-### Example:
+
+
+### Fixture Syntax
+
+```bash
+  - method - the method name
+    - match (optional) - match against the query
+    - error (optional) - error to return for the given match
+    - data (obj/fn) (optional) - data to return
+    - handle (fn) - manually handle respnse
+    - one (bool) - only return one item
+```
+
+### Example
 
 
 ```javascript
 var fixie = require("fixie");
 
-var fixtures = {
-  loadUser: [
+var commands = fixie({
+  
+  /**
+   */
+
+  registerUser: [
     {
+      match: { username: "taken" },
+      error: new Error("that username is already taken")
+    },
+    {
+      match: { username: "free" },
       data: {
-        _id: "user1"
+        _id: "user1",
+        username: "free"
+      }
     }
   ],
-  loadClasses: {
+
+  /**
+   */
+
+  loadFriends: {
     data: [
       {
-        _id: "class1",
-        user: "user1"
+        _id: "friend1",
+        user: "user1",
       },
       {
-        _id: "class2",
+        _id: "friend2",
         user: "user1"
       }
     ]
   },
-  loadStudents: {
-    data: [
-      {
-        _id: "student1",
-        "class": "class1"
+
+  /**
+   */
+
+  forgotUsername: {
+    handle: function (query, next) {
+
+      if(query.username != "existing") {
+        return next(new Error("username not found"));
       }
-    ]
+
+      return next();
+    }
   }
-};
-
-var fix = fixie(fixtures);
-
-fix.loadProfile({ _id: profile1 }, function (err, profile) {
-  fix.loadClasses({ profile: profile._id }, function (err, classes) {
-    // do stuff with fixtures
-  });
 });
-```
 
 
-### Fixture Syntax
-
-```
-  - method - the method name
-    - match (optional) - match against the query
-    - error (optional) - error to return for the given match
-    - data (obj/fn) (optional) - data to return
+commands.registerUser({ username: "free" }, function (err, user) {
     
+    // loaded free user
+    commands.loadFriends({ user: user._id }, function (err, friends) {
+      //loaded friends 1, and 2
+    });
+});
 ```
