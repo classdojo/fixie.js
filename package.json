@@ -16,7 +16,7 @@
     "url": "https://github.com/classdojo/fixie.js/issues"
   },
   "dependencies": {
-    "protoclass": "0.0.2",
+    "protoclass": "0.0.x",
     "sift": "0.0.12",
     "toarray": "0.0.1",
     "comerr": "0.0.6"
